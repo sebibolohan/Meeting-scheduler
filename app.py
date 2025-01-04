@@ -90,3 +90,38 @@ def add_meeting(title, start_time, end_time, participants_input):
         if 'connection' in locals() and connection:
             cursor.close()
             connection.close()
+
+def get_meetings_in_interval(start_time, end_time):
+    """
+    Fetch meetings within a given time interval from the database.
+
+    Args:
+        start_time (str): Start time in 'YYYY-MM-DD HH:MM' format.
+        end_time (str): End time in 'YYYY-MM-DD HH:MM' format.
+
+    Returns:
+        list: A list of meetings, where each meeting is represented as a tuple.
+    """
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        # Query to fetch meetings in the given interval
+        query = """
+        SELECT title, start_time, end_time
+        FROM meetings
+        WHERE start_time >= %s AND end_time <= %s
+        ORDER BY start_time ASC;
+        """
+        cursor.execute(query, (start_time, end_time))
+        meetings = cursor.fetchall()  
+        return meetings
+    except Exception as e:
+        print(f"Error fetching meetings: {e}")
+        return []
+    finally:
+        if 'connection' in locals() and connection:
+            cursor.close()
+            connection.close()
+
+   

@@ -1,7 +1,7 @@
 from db_connection import get_db_connection
 import tkinter as tk
 from tkinter import messagebox
-from gui import add_person_gui,add_meeting_gui
+from gui import add_person_gui,add_meeting_gui, view_meetings_gui
 def exit_app():
     if messagebox.askyesno("Exit", "Are you sure that you want to close the app?"):
         root.destroy()
@@ -42,6 +42,15 @@ tk.Button(
     bg="lightblue",                 
     fg="black",                 
 ).pack(pady=10)
+tk.Button(
+    root,
+    text="View Meetings",
+    command=view_meetings_gui,
+    font=("Helvetica", 12, "bold"), 
+    width=20,                      
+    height=2,                       
+    bg="lightblue",                 
+    fg="black", ).pack(pady=10)
 tk.Button(
     root,
     text="Exit",

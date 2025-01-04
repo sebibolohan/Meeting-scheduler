@@ -1,5 +1,5 @@
-from tkinter import Toplevel, Label, Entry, Button, messagebox
-from app import add_person,add_meeting
+from tkinter import Toplevel, Label, Entry, Button, messagebox,Text
+from app import add_person,add_meeting, get_meetings_in_interval
 from datetime import datetime
 import re
 def validate_name(name):
@@ -44,27 +44,19 @@ def validate_participants(participants_input):
     Returns:
         bool: True if all names are valid, False otherwise.
     """
-    # Regular expression to match a single valid name part (e.g., "John" or "Doe")
-    name_pattern = r"^[A-Za-z]+(?:[-][A-Za-z]+)*$"  # Allows letters and optional hyphen
+    name_pattern = r"^[A-Za-z]+(?:[-][A-Za-z]+)*$"  
 
-    # Split the input into individual participants
     participants = [p.strip() for p in participants_input.split(",")]
 
     # Validate each participant
     for name in participants:
-        # Split each name into parts (first name, last name, etc.)
         name_parts = name.split()
-        
-        # Check if the name has at least two parts (Firstname and Lastname)
         if len(name_parts) < 2:
-            return False  # Invalid: not enough parts
+            return False  
         
-        # Check each part of the name against the regular expression
         for part in name_parts:
             if not re.match(name_pattern, part):
-                return False  # Invalid: contains invalid characters
-
-    # If all names pass validation
+                return False  
     return True
 
 def add_person_gui():
@@ -112,7 +104,7 @@ def add_person_gui():
     fg="black").pack(pady=10)
     
 def add_meeting_gui():
-    """Add a meeting to the database after validating the inputs: length less than 100 characters for title; valid time-format for start_time and end_time (YYYY-MM-DD HH:MM); valid list of participants (firstname lastname , fn2 ln2, ..)."""
+    """Add a meeting to the database after validating the inputs: length less than 100 characters for title; valid time-format for start_time and end_time (YYYY-MM-DD HH:MM), start_date is before end_date; valid list of participants (firstname lastname , fn2 ln2, ..)."""
     def save_meeting():
         meeting_title=meeting_title_entry.get()
         meeting_start_time=meeting_start_time_entry.get()
@@ -125,16 +117,11 @@ def add_meeting_gui():
             messagebox.showerror("Error","The meeting title must be shorter than 100 characters.")
             return
         if not validate_datetime(meeting_start_time):
-            messagebox.showerror("Error","The start date or the time is not valid.")
+            messagebox.showerror("Error","The start date or time is not valid.")
             return    
         if not validate_datetime(meeting_end_time):
-            messagebox.showerror("Error","The end date or the time is not valid.")
+            messagebox.showerror("Error","The end date or time is not valid.")
             return
-        print(f"Start Time: {meeting_start_time}")
-        print(f"End Time: {meeting_end_time}")
-        meeting_start_time = meeting_start_time.strip()
-        meeting_end_time = meeting_end_time.strip()
-
 
         if not validate_start_and_end_times(meeting_start_time,meeting_end_time):
             messagebox.showerror("Error","The end date (and time) should be after the start time (and time).")
@@ -176,3 +163,44 @@ def add_meeting_gui():
     width=10,                                           
     bg="lightblue",                 
     fg="black").pack(pady=10)
+
+def view_meetings_gui():
+    """View all the meetings from database that have the specified start_date and end_date after validating:  valid time-format for start_time and end_time (YYYY-MM-DD HH:MM), start_date is before end_date"""
+    def view_meetings():
+        meetings_start_date=meetings_start_date_entry.get()
+        meetings_end_date=meetings_end_date_entry.get()
+        if not validate_datetime(meetings_start_date):
+            messagebox.showerror("Error","The start date or time is not valid.")
+            return
+        if not validate_datetime(meetings_end_date):
+            messagebox.showerror("Error","The end date or time is not valid.")
+            return
+        if not validate_start_and_end_times(meetings_start_date,meetings_end_date):
+            messagebox.showerror("Error","The end date (and time) should be after the start time (and time).")
+            return
+        meetings = get_meetings_in_interval(meetings_start_date, meetings_end_date)
+        results_text.delete("1.0", "end") 
+        if meetings:
+            for meeting in meetings:
+                title, start, end = meeting
+                results_text.insert("end", f"Title: {title}\nStart: {start}\nEnd: {end}\n\n")
+        else:
+            results_text.insert("end", "No meetings found in the specified interval.")
+
+    window=Toplevel()
+    window.geometry("600x500")
+    window.title("View Meetings")
+    title_label=Label(window,text="View Meetings",font=("Helvetica", 25))
+    title_label.pack(pady=20)
+    Label(window,text="Date and starting hour (YYYY-MM-DD HH:MM):",font=("Helvetica", 15)).pack(pady=5)
+    meetings_start_date_entry=Entry(window,width=30)
+    meetings_start_date_entry.pack(pady=10)
+    Label(window,text="Date and ending hour (YYYY-MM-DD HH:MM):",font=("Helvetica", 15)).pack(pady=5)
+    meetings_end_date_entry=Entry(window,width=30)
+    meetings_end_date_entry.pack(pady=10)
+    Button(window,text="View", command=view_meetings, font=("Helvetica",10,"bold"), width=10,                                           
+    bg="lightblue",                 
+    fg="black").pack(pady=10)
+    results_text = Text(window, width=60, height=20, wrap="word")
+    results_text.pack(pady=10)
+
