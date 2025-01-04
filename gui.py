@@ -1,5 +1,5 @@
 from tkinter import Toplevel, Label, Entry, Button, messagebox,Text
-from app import add_person,add_meeting, get_meetings_in_interval,get_all_meetings,export_meetings_to_ics,export_meetings_in_interval_to_ics
+from app import add_person,add_meeting, get_meetings_in_interval,get_all_meetings,export_meetings_to_ics,export_meetings_in_interval_to_ics,import_meetings_from_ics
 from datetime import datetime
 import re
 from datetime import datetime
@@ -235,3 +235,18 @@ def export_meetings_gui():
     export_meetings_to_ics(meetings)
     messagebox.showinfo("Success", "Meetings exported to 'meetings.ics' successfully!")
 
+def import_meetings_gui():
+    """
+    Open a file dialog to select an ICS file and import meetings into the database.
+    """
+    from tkinter.filedialog import askopenfilename
+
+    # Open file dialog to select an ICS file
+    file_name = askopenfilename(
+        title="Select ICS File",
+        filetypes=[("ICS Files", "*.ics"), ("All Files", "*.*")]
+    )
+
+    if file_name:
+        # Call the import function
+        import_meetings_from_ics(file_name)

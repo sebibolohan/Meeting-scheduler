@@ -28,8 +28,9 @@ def add_meeting(title, start_time, end_time, participants_input):
     """
     try:
         connection = get_db_connection()
-        cursor = connection.cursor()
+        cursor = connection.cursor() 
         participants = [p.strip() for p in participants_input.split(",")]
+       
         for participant in participants:
             firstname, lastname = participant.split(" ", 1)
 
@@ -166,8 +167,8 @@ def export_meetings_to_ics(meetings, file_name="all_meetings.ics"):
         title, start_time, end_time = meeting
         event = Event()
         event.name = title
-        event.begin = start_time 
-        event.end = end_time     
+        event.begin = start_time.replace(tzinfo=None)
+        event.end = end_time.replace(tzinfo=None)  
         calendar.events.add(event)
 
     with open(file_name, "w") as f:
@@ -182,8 +183,70 @@ def export_meetings_in_interval_to_ics(meetings_start_date,meetings_end_date):
             title, start_time, end_time = meeting
             event = Event()
             event.name = title
-            event.begin = start_time 
-            event.end = end_time     
+            event.begin = start_time.replace(tzinfo=None)
+            event.end = end_time.replace(tzinfo=None)     
             calendar.events.add(event)
         with open("meetings.ics", "w") as f:
             f.write(str(calendar))
+def add_meeting_without_participants(title, start_time,end_time):
+    """
+    Add  a meeting without participant to the database.
+    Args:
+        title (str): The title of the meeting.
+        start_time (str): Start time in 'YYYY-MM-DD HH:MM' format.
+        end_time (str): End time in 'YYYY-MM-DD HH:MM' format.
+
+    """ 
+    try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+        cursor.execute(
+            "INSERT INTO meetings (title, start_time, end_time) VALUES (%s, %s, %s)",
+            (title, start_time, end_time),
+        )
+        connection.commit()
+        print(f"Meeting '{title}' has been successfully added.")
+        messagebox.showinfo("Success", f"Meeting '{title}' has been added.")
+    except Exception as e:
+        print(f"Error inserting meetings: {e}")
+        return []
+    finally:
+        if 'connection' in locals() and connection:
+            cursor.close()
+            connection.close()   
+    
+
+def import_meetings_from_ics(file_name="meetings.ics"):
+    """
+    Import meetings from an ICS calendar file and save them to the database.
+
+    Args:
+        file_name (str): The name of the ICS file to import.
+    """
+    try:
+        with open(file_name, "r", encoding="utf-8") as f:
+            calendar = Calendar(f.read())
+
+        imported_meetings = []
+
+        for event in calendar.events:
+            title = event.name
+            start_time = event.begin.datetime  
+            end_time = event.end.datetime     
+            
+            if end_time <= start_time:
+                print(f"Skipping meeting '{title}': End time must be after start time.")
+                continue
+            try:
+                add_meeting_without_participants(title, start_time.strftime("%Y-%m-%d %H:%M:%S"), end_time.strftime("%Y-%m-%d %H:%M:%S"))
+                imported_meetings.append((title, start_time, end_time))
+            except Exception as e:
+                print(f"Error adding meeting '{title}': {e}")
+
+        print(f"Successfully imported {len(imported_meetings)} meetings.")
+        messagebox.showinfo("Import Success", f"Successfully imported {len(imported_meetings)} meetings.")
+    
+    except Exception as e:
+        print(f"Error importing meetings: {e}")
+        messagebox.showerror("Import Error", f"An error occurred while importing: {e}")
+    
