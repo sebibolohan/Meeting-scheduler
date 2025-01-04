@@ -11,8 +11,8 @@ DB_CONFIG = {
 def get_db_connection():
     try:
         connection = psycopg2.connect(**DB_CONFIG)
-        print("Conexiune reușită la baza de date!")
+        print("The connection to the database was made succesfully!")
         return connection
     except Exception as e:
-        print(f"Eroare la conectarea cu baza de date: {e}")
+        print(f"Error: The connection to the database failed: {e}!")
         return None
