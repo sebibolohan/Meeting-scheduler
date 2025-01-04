@@ -1,7 +1,9 @@
 from tkinter import Toplevel, Label, Entry, Button, messagebox,Text
-from app import add_person,add_meeting, get_meetings_in_interval
+from app import add_person,add_meeting, get_meetings_in_interval,get_all_meetings,export_meetings_to_ics,export_meetings_in_interval_to_ics
 from datetime import datetime
 import re
+from datetime import datetime
+
 def validate_name(name):
     """Validate that the name contains only letters, spaces, or hyphens."""
     pattern = r"^[A-Za-z\s-]+$"  
@@ -186,7 +188,25 @@ def view_meetings_gui():
                 results_text.insert("end", f"Title: {title}\nStart: {start}\nEnd: {end}\n\n")
         else:
             results_text.insert("end", "No meetings found in the specified interval.")
-
+    def export_meetings():
+        """Export all the meetings from database that have the specified start_date and end_date after validating as .ics:  valid time-format for start_time and end_time (YYYY-MM-DD HH:MM), start_date is before end_date"""
+        meetings_start_date=meetings_start_date_entry.get()
+        meetings_end_date=meetings_end_date_entry.get()
+        if not validate_datetime(meetings_start_date):
+            messagebox.showerror("Error","The start date or time is not valid.")
+            return
+        if not validate_datetime(meetings_end_date):
+            messagebox.showerror("Error","The end date or time is not valid.")
+            return
+        if not validate_start_and_end_times(meetings_start_date,meetings_end_date):
+            messagebox.showerror("Error","The end date (and time) should be after the start time (and time).")
+            return
+        try:
+            export_meetings_in_interval_to_ics(meetings_start_date,meetings_end_date)
+            messagebox.showinfo("Success",f"The meetings from the interval has been exported.")
+        except Exception as e:
+            messagebox.showerror("Error",f"An error ocurred: {e}")
+       
     window=Toplevel()
     window.geometry("600x500")
     window.title("View Meetings")
@@ -201,6 +221,17 @@ def view_meetings_gui():
     Button(window,text="View", command=view_meetings, font=("Helvetica",10,"bold"), width=10,                                           
     bg="lightblue",                 
     fg="black").pack(pady=10)
+    Button(window,text="Export as .ics", command=export_meetings, font=("Helvetica",10,"bold"), width=10, bg="lightblue",                 
+    fg="black").pack(pady=10)                                       
+    
     results_text = Text(window, width=60, height=20, wrap="word")
     results_text.pack(pady=10)
+
+def export_meetings_gui():
+    """
+    Export all meetings in the database to an ICS file.
+    """
+    meetings = get_all_meetings()  
+    export_meetings_to_ics(meetings)
+    messagebox.showinfo("Success", "Meetings exported to 'meetings.ics' successfully!")
 

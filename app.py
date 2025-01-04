@@ -1,4 +1,6 @@
 from db_connection import get_db_connection
+from ics import Calendar, Event
+from datetime import datetime
 def add_person (firstname, lastname):
     try:
         connection=get_db_connection()
@@ -123,5 +125,65 @@ def get_meetings_in_interval(start_time, end_time):
         if 'connection' in locals() and connection:
             cursor.close()
             connection.close()
+def get_all_meetings():
+     """
+    Fetch all the meetings from the database.
 
+    Returns:
+        list: A list of meetings, where each meeting is represented as a tuple.
+    """
+     try:
+        connection = get_db_connection()
+        cursor = connection.cursor()
+
+        # Query to fetch meetings in the given interval
+        query = """
+        SELECT title, start_time, end_time
+        FROM meetings
+        ORDER BY start_time ASC;
+        """
+        cursor.execute(query)
+        meetings = cursor.fetchall()  
+        return meetings
+     except Exception as e:
+        print(f"Error fetching meetings: {e}")
+        return []
+     finally:
+        if 'connection' in locals() and connection:
+            cursor.close()
+            connection.close()
+def export_meetings_to_ics(meetings, file_name="all_meetings.ics"):
+    """
+    Export a list of meetings to an ICS calendar file.
+
+    Args:
+        meetings (list): A list of meetings where each meeting is a tuple (title, start_time, end_time).
+        file_name (str): The name of the output ICS file.
+    """
+    calendar = Calendar()
+
+    for meeting in meetings:
+        title, start_time, end_time = meeting
+        event = Event()
+        event.name = title
+        event.begin = start_time 
+        event.end = end_time     
+        calendar.events.add(event)
+
+    with open(file_name, "w") as f:
+        f.write(str(calendar))
+
+    print(f"Meetings exported successfully to {file_name}!")
    
+def export_meetings_in_interval_to_ics(meetings_start_date,meetings_end_date):
+        meetings = get_meetings_in_interval(meetings_start_date, meetings_end_date)
+        calendar = Calendar()
+        for meeting in meetings:
+            title, start_time, end_time = meeting
+            event = Event()
+            event.name = title
+            event.begin = start_time 
+            event.end = end_time     
+            calendar.events.add(event)
+        with open("meetings.ics", "w") as f:
+            f.write(str(calendar))
