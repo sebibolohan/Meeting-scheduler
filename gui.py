@@ -62,7 +62,7 @@ def validate_participants(participants_input):
     return True
 
 def add_person_gui():
-    """Add a person to the database after validating the inputs: length less than 100 characters, not null, and without special characters or numbers."""
+    """Take input from GUI in order to add a person to the database after validating the inputs: length less than 100 characters, not null, and without special characters or numbers."""
     def save_person():
       firstname=firstname_entry.get()
       lastname=lastname_entry.get()
@@ -106,7 +106,7 @@ def add_person_gui():
     fg="black").pack(pady=10)
     
 def add_meeting_gui():
-    """Add a meeting to the database after validating the inputs: length less than 100 characters for title; valid time-format for start_time and end_time (YYYY-MM-DD HH:MM), start_date is before end_date; valid list of participants (firstname lastname , fn2 ln2, ..)."""
+    """Take input from GUI in order to add a meeting  to the database after validating the inputs: length less than 100 characters for title; valid time-format for start_time and end_time (YYYY-MM-DD HH:MM), start_date is before end_date; valid list of participants (firstname lastname , fn2 ln2, ..)."""
     def save_meeting():
         meeting_title=meeting_title_entry.get()
         meeting_start_time=meeting_start_time_entry.get()
@@ -233,7 +233,7 @@ def export_meetings_gui():
     """
     meetings = get_all_meetings()  
     export_meetings_to_ics(meetings)
-    messagebox.showinfo("Success", "Meetings exported to 'meetings.ics' successfully!")
+    messagebox.showinfo("Success", "Meetings exported to 'all-meetings.ics' successfully!")
 
 def import_meetings_gui():
     """
