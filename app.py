@@ -1,6 +1,7 @@
 from db_connection import get_db_connection
 from ics import Calendar, Event
 from datetime import datetime
+from tkinter import messagebox
 def add_person (firstname, lastname):
     try:
         connection=get_db_connection()
@@ -14,7 +15,6 @@ def add_person (firstname, lastname):
         if 'connection' in locals() and connection:
             cursor.close()
             connection.close()
-from tkinter import messagebox
 
 def add_meeting(title, start_time, end_time, participants_input):
     """

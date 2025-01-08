@@ -92,17 +92,18 @@ def add_person_gui():
     window=Toplevel()
     window.geometry("400x300")
     window.title("Add Person")
-    title_label = Label(window, text="Add person", font=("Helvetica", 25))
+    window.config(bg="#D2B48C")
+    title_label = Label(window, text="Add person", font=("Helvetica", 25),bg="#D2B48C")
     title_label.pack(pady=20)
-    Label(window,text="Firstname:",font=("Helvetica", 15)).pack(pady=5)
+    Label(window,text="Firstname:",font=("Helvetica", 15),bg="#D2B48C").pack(pady=5)
     firstname_entry=Entry(window,width=30)
     firstname_entry.pack(pady=10)
-    Label(window,text="Lastname:",font=("Helvetica", 15)).pack(pady=5)
+    Label(window,text="Lastname:",font=("Helvetica", 15),bg="#D2B48C").pack(pady=5)
     lastname_entry=Entry(window,width=30)
     lastname_entry.pack(pady=5)
     Button(window,text="Save",command=save_person, font=("Helvetica", 10, "bold"), 
     width=10,                                           
-    bg="lightblue",                 
+    bg="lightgrey",                 
     fg="black").pack(pady=10)
     
 def add_meeting_gui():
@@ -147,23 +148,24 @@ def add_meeting_gui():
     window=Toplevel()
     window.geometry("600x500")
     window.title("Add meeting")
-    title_label=Label(window,text="Add meeting",font=("Helvetica", 25))
+    window.config(bg="#D2B48C")
+    title_label=Label(window,text="Add meeting",font=("Helvetica", 25),bg="#D2B48C")
     title_label.pack(pady=20)
-    Label(window,text="Title:",font=("Helvetica", 15)).pack(pady=5)
+    Label(window,text="Title:",font=("Helvetica", 15),bg="#D2B48C").pack(pady=5)
     meeting_title_entry=Entry(window,width=30)
     meeting_title_entry.pack(pady=10)
-    Label(window, text="Date and starting hour (YYYY-MM-DD HH:MM):", font=("Helvetica", 15)).pack(pady=5)
+    Label(window, text="Date and starting hour (YYYY-MM-DD HH:MM):", font=("Helvetica", 15),bg="#D2B48C").pack(pady=5)
     meeting_start_time_entry=Entry(window,width=30)
     meeting_start_time_entry.pack(pady=10)
-    Label(window, text="Date and ending hour (YYYY-MM-DD HH:MM):", font=("Helvetica", 15)).pack(pady=5)
+    Label(window, text="Date and ending hour (YYYY-MM-DD HH:MM):", font=("Helvetica", 15),bg="#D2B48C").pack(pady=5)
     meeting_end_time_entry=Entry(window,width=30)
     meeting_end_time_entry.pack(pady=10)
-    Label (window,text="Participants (firstname lastname , ...)", font=("Helvetica", 15)).pack(pady=5)
+    Label (window,text="Participants (firstname lastname , ...)", font=("Helvetica", 15),bg="#D2B48C").pack(pady=5)
     meeting_participants_entry=Entry(window,width=30)
     meeting_participants_entry.pack(pady=10)
     Button(window,text="Save",command=save_meeting, font=("Helvetica", 10, "bold"), 
     width=10,                                           
-    bg="lightblue",                 
+    bg="lightgrey",                 
     fg="black").pack(pady=10)
 
 def view_meetings_gui():
@@ -210,18 +212,19 @@ def view_meetings_gui():
     window=Toplevel()
     window.geometry("600x500")
     window.title("View Meetings")
-    title_label=Label(window,text="View Meetings",font=("Helvetica", 25))
+    window.config(bg="#D2B48C")
+    title_label=Label(window,text="View Meetings",font=("Helvetica", 25),bg="#D2B48C")
     title_label.pack(pady=20)
-    Label(window,text="Date and starting hour (YYYY-MM-DD HH:MM):",font=("Helvetica", 15)).pack(pady=5)
+    Label(window,text="Date and starting hour (YYYY-MM-DD HH:MM):",font=("Helvetica", 15),bg="#D2B48C").pack(pady=5)
     meetings_start_date_entry=Entry(window,width=30)
     meetings_start_date_entry.pack(pady=10)
-    Label(window,text="Date and ending hour (YYYY-MM-DD HH:MM):",font=("Helvetica", 15)).pack(pady=5)
+    Label(window,text="Date and ending hour (YYYY-MM-DD HH:MM):",font=("Helvetica", 15),bg="#D2B48C").pack(pady=5)
     meetings_end_date_entry=Entry(window,width=30)
     meetings_end_date_entry.pack(pady=10)
     Button(window,text="View", command=view_meetings, font=("Helvetica",10,"bold"), width=10,                                           
-    bg="lightblue",                 
+    bg="lightgrey",                 
     fg="black").pack(pady=10)
-    Button(window,text="Export as .ics", command=export_meetings, font=("Helvetica",10,"bold"), width=10, bg="lightblue",                 
+    Button(window,text="Export as .ics", command=export_meetings, font=("Helvetica",10,"bold"), width=10, bg="lightgrey",                 
     fg="black").pack(pady=10)                                       
     
     results_text = Text(window, width=60, height=20, wrap="word")

@@ -18,8 +18,9 @@ else:
 #Open the GUI
 root = tk.Tk()
 root.title("Meeting Scheduler")
-root.geometry("600x500")
-title_label = tk.Label(root, text="Meeting Scheduler", font=("Helvetica", 30))
+root.geometry("600x550")
+root.configure(bg='#D2B48C')
+title_label = tk.Label(root, text="Meeting Scheduler", font=("Helvetica", 30),background="#D2B48C")
 title_label.pack(pady=20)
 
 tk.Button(
@@ -29,7 +30,7 @@ tk.Button(
     font=("Helvetica", 12, "bold"), 
     width=20,                      
     height=2,                       
-    bg="lightblue",                 
+    bg="lightgrey",                 
     fg="black",                 
 ).pack(pady=10)
 tk.Button(
@@ -39,7 +40,7 @@ tk.Button(
     font=("Helvetica", 12, "bold"), 
     width=20,                      
     height=2,                       
-    bg="lightblue",                 
+    bg="lightgrey",                 
     fg="black",                 
 ).pack(pady=10)
 tk.Button(
@@ -49,7 +50,7 @@ tk.Button(
     font=("Helvetica", 12, "bold"), 
     width=20,                      
     height=2,                       
-    bg="lightblue",                 
+    bg="lightgrey",                 
     fg="black", ).pack(pady=10)
 tk.Button(
     root,
@@ -58,7 +59,7 @@ tk.Button(
     font=("Helvetica", 12, "bold"), 
     width=20,                      
     height=2,                       
-    bg="lightblue",                 
+    bg="lightgrey",                 
     fg="black", ).pack(pady=10)
 tk.Button(
     root,
@@ -67,7 +68,7 @@ tk.Button(
     font=("Helvetica", 12, "bold"), 
     width=20,                      
     height=2,                       
-    bg="lightblue",                 
+    bg="lightgrey",                 
     fg="black", ).pack(pady=10)
 tk.Button(
     root,
@@ -76,7 +77,7 @@ tk.Button(
     font=("Helvetica", 12, "bold"), 
     width=20,                      
     height=2,                       
-    bg="lightblue",                 
+    bg="lightgrey",                 
     fg="black", ).pack(pady=10)
 # Start loop Tkinter
 if __name__ == "__main__":
